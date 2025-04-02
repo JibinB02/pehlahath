@@ -26,7 +26,10 @@ self.addEventListener("fetch", (event) => {
   if (
     event.request.url.includes("/ws") ||
     event.request.url.includes("__vite_hmr") ||
-    event.request.url.includes("socket.io")
+    event.request.url.includes("socket.io") ||
+    event.request.url.includes("weather-api167.p.rapidapi.com") ||
+    event.request.url.includes("api/weather") ||
+    event.request.url.includes("open-weather13.p.rapidapi.com")
   ) {
     return;
   }

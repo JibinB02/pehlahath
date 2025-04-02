@@ -16,6 +16,7 @@ import { Layout } from './components/Layout';
 import { Toaster } from 'react-hot-toast';
 import { Profile } from './pages/Profile';
 import { DamWaterLevels } from './pages/DamWaterLevels';
+import { Weather } from './components/Weather';
 import { initDB } from './utils/indexedDB';
 import { toast } from 'react-hot-toast';
 
@@ -111,6 +112,7 @@ function App() {
           <Route path="/volunteers" element={<Volunteers/>}/>
           <Route path="/profile" element={<Profile/>}/>
           <Route path="/dam-water-levels" element={<DamWaterLevels/>}/>
+          <Route path='/weather' element={<Weather />}/>
         </Route>
         <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />
       </Routes>
