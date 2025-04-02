@@ -130,3 +130,56 @@ export const sendBatchAlertEmails = async (recipients, alertData) => {
       return { success: false, error: error.message };
     }
 };
+
+export const sendVerificationEmail = async (recipient, name, verificationLink) => {
+  try {
+    const mailOptions = {
+      from: `"PEHLA-HATH" <${process.env.EMAIL_USER}>`,
+      to: recipient,
+      subject: 'Verify Your Email - PEHLA-HATH',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #d32f2f; margin: 0;">Email Verification</h1>
+            <p style="color: #666; font-size: 14px;">PEHLA-HATH Emergency Response System</p>
+          </div>
+          
+          <div style="margin-bottom: 20px; padding: 15px; background-color: #f8f8f8; border-radius: 4px;">
+            <h2 style="margin-top: 0; color: #333;">Hello ${name},</h2>
+            <p style="margin-bottom: 20px; line-height: 1.5;">
+              Thank you for registering with PEHLA-HATH. To complete your registration and activate your account, please verify your email address by clicking the button below:
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${verificationLink}" style="background-color: #d32f2f; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+                Verify Email Address
+              </a>
+            </div>
+            
+            <p style="margin-bottom: 5px; line-height: 1.5;">
+              If the button doesn't work, you can also copy and paste the following link into your browser:
+            </p>
+            <p style="margin-top: 0; margin-bottom: 20px; word-break: break-all;">
+              <a href="${verificationLink}" style="color: #1a73e8;">${verificationLink}</a>
+            </p>
+            
+            <p style="margin-bottom: 5px; line-height: 1.5;">
+              This verification link will expire in 24 hours.
+            </p>
+          </div>
+          
+          <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #666; font-size: 12px;">
+            <p>If you did not create an account with PEHLA-HATH, please ignore this email.</p>
+            <p>&copy; ${new Date().getFullYear()} PEHLA-HATH. All rights reserved.</p>
+          </div>
+        </div>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+    return { success: false, error: error.message };
+  }
+};

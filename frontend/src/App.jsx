@@ -19,6 +19,7 @@ import { DamWaterLevels } from './pages/DamWaterLevels';
 import { Weather } from './components/Weather';
 import { initDB } from './utils/indexedDB';
 import { toast } from 'react-hot-toast';
+import { VerifyEmail } from './pages/VerifyEmail';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -93,6 +94,7 @@ function App() {
       <Routes>
         <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
         <Route path="/register" element={<Register/>}/>
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/" element={
           <ProtectedRoute>
             <Dashboard />

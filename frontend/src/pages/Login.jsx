@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
@@ -10,15 +10,17 @@ const BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}/api/auth`;
 export function Login() {
   const { login } = useAuth(); // Use AuthContext
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
+  
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email');
     const password = formData.get('password');
-
+  
     try {
       console.log('Attempting login with:', { email });
       const response = await axios.post(`${BACKEND_URL}/login`, { email, password });
@@ -37,7 +39,15 @@ export function Login() {
         response: error.response?.data,
         status: error.response?.status
       });
-      toast.error(error.response?.data?.error || 'Login failed. Please try again.');
+      
+      // Check if the error is due to unverified email
+      if (error.response?.data?.needsVerification) {
+        toast.error('Please verify your email before logging in');
+        // Navigate to verification page with email
+        navigate('/verify-email', { state: { email: error.response.data.email } });
+      } else {
+        toast.error(error.response?.data?.error || 'Login failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
