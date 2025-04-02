@@ -1,13 +1,16 @@
 import axios from 'axios';
 
 // Updated API configuration for OpenWeather
-const WEATHER_API_KEY = import.meta.env.WEATHER_API_KEY;
-const WEATHER_API_HOST = import.meta.env.WEATHER_API_HOST;
-const WEATHER_API_BASE_URL = import.meta.env.WEATHER_API_BASE_URL;
+const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+const WEATHER_API_HOST = import.meta.env.VITE_WEATHER_API_HOST;
+const WEATHER_API_BASE_URL = import.meta.env.VITE_WEATHER_API_BASE_URL;
 
 // Function to get current weather data based on coordinates
 export const getCurrentWeather = async (latitude, longitude) => {
   try {
+    console.log("WEATHER_API_KEY", WEATHER_API_KEY);
+    console.log("WEATHER_API_HOST", WEATHER_API_HOST);
+    console.log("WEATHER_API_BASE_URL", WEATHER_API_BASE_URL);
     // First try to get weather by coordinates
     const response = await axios.get(`${WEATHER_API_BASE_URL}/city/latlon/${latitude}/${longitude}`, {
       headers: {
