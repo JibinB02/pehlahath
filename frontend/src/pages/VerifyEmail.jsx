@@ -14,8 +14,13 @@ export function VerifyEmail() {
   const [email, setEmail] = useState('');
 
   useEffect(() => {
+    console.log("VerifyEmail component mounted");
+    console.log("Location state:", location.state);
+    console.log("URL search params:", location.search);
+    
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
+    console.log("Token from URL:", token);
     
     if (token) {
       verifyEmail(token);
@@ -32,10 +37,12 @@ export function VerifyEmail() {
   const verifyEmail = async (token) => {
     try {
       const response = await axios.get(`${BACKEND_URL}/verify-email/${token}`);
+      console.log("Verification response:", response.data);
       setVerificationStatus('success');
       toast.success(response.data.message);
     } catch (error) {
       console.error('Verification error:', error);
+      console.error('Error response:', error.response?.data);
       setVerificationStatus('error');
       toast.error(error.response?.data?.error || 'Verification failed. Please try again.');
     }

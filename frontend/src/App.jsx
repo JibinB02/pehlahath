@@ -19,7 +19,7 @@ import { DamWaterLevels } from './pages/DamWaterLevels';
 import { Weather } from './components/Weather';
 import { initDB } from './utils/indexedDB';
 import { toast } from 'react-hot-toast';
-import { VerifyEmail } from './pages/VerifyEmail';
+import {VerifyEmail}  from './pages/VerifyEmail';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {

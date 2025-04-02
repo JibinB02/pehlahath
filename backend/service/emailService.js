@@ -133,6 +133,8 @@ export const sendBatchAlertEmails = async (recipients, alertData) => {
 
 export const sendVerificationEmail = async (recipient, name, verificationLink) => {
   try {
+    console.log("Sending verification email with link:", verificationLink);
+    
     const mailOptions = {
       from: `"PEHLA-HATH" <${process.env.EMAIL_USER}>`,
       to: recipient,
@@ -177,6 +179,7 @@ export const sendVerificationEmail = async (recipient, name, verificationLink) =
     };
 
     const info = await transporter.sendMail(mailOptions);
+    console.log("Verification email sent:", info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('Error sending verification email:', error);
