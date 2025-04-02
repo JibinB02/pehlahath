@@ -43,6 +43,7 @@ export const registerUser = async (req, res) => {
 
     // Send verification email
     const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+    console.log(`Generated verification link: ${verificationLink}`);
     await sendVerificationEmail(email, name, verificationLink);
 
     res.status(201).json({ 

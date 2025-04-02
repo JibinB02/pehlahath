@@ -12,6 +12,7 @@ export function VerifyEmail() {
   const [verificationStatus, setVerificationStatus] = useState('verifying'); // 'verifying', 'success', 'error'
   const [isResending, setIsResending] = useState(false);
   const [email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     console.log("VerifyEmail component mounted");
@@ -31,20 +32,49 @@ export function VerifyEmail() {
         setEmail(state.email);
       }
       setVerificationStatus('error');
+      setErrorMessage('No verification token found in the URL');
     }
   }, [location]);
 
   const verifyEmail = async (token) => {
     try {
+      console.log(`Attempting to verify email with token: ${token}`);
+      console.log(`Making request to: ${BACKEND_URL}/verify-email/${token}`);
+      
       const response = await axios.get(`${BACKEND_URL}/verify-email/${token}`);
       console.log("Verification response:", response.data);
+      
+      // Clear any previous error state
+      setErrorMessage('');
       setVerificationStatus('success');
-      toast.success(response.data.message);
+      toast.success(response.data.message || 'Email verified successfully!');
+      
+      // Return early to prevent any further processing
+      return;
     } catch (error) {
       console.error('Verification error:', error);
       console.error('Error response:', error.response?.data);
+      
+      // Set error state
       setVerificationStatus('error');
-      toast.error(error.response?.data?.error || 'Verification failed. Please try again.');
+      
+      // Extract the specific error message
+      const errorMsg = error.response?.data?.error || 'Verification failed. Please try again.';
+      setErrorMessage(errorMsg);
+      
+      // Show appropriate toast message
+      if (errorMsg.includes('Invalid or expired')) {
+        toast.error('Your verification link has expired or is invalid. Please request a new one.');
+        
+        // Try to extract email from URL if possible
+        const emailParam = new URLSearchParams(location.search).get('email');
+        if (emailParam) {
+          setEmail(emailParam);
+          console.log("Found email in URL params:", emailParam);
+        }
+      } else {
+        toast.error(errorMsg);
+      }
     }
   };
 
@@ -57,10 +87,17 @@ export function VerifyEmail() {
     setIsResending(true);
     try {
       const response = await axios.post(`${BACKEND_URL}/resend-verification`, { email });
-      toast.success(response.data.message);
+      toast.success(response.data.message || 'Verification email sent successfully!');
+      toast.info('Please check your email for the new verification link');
     } catch (error) {
       console.error('Resend verification error:', error);
-      toast.error(error.response?.data?.error || 'Failed to resend verification email. Please try again.');
+      const errorMsg = error.response?.data?.error || 'Failed to resend verification email. Please try again.';
+      toast.error(errorMsg);
+      
+      // If user not found, provide a helpful message
+      if (errorMsg.includes('not found') || error.response?.status === 404) {
+        setErrorMessage('Email address not found. Please check your email or register a new account.');
+      }
     } finally {
       setIsResending(false);
     }
@@ -80,7 +117,7 @@ export function VerifyEmail() {
         <p className="mt-2 text-center text-sm text-gray-600">
           {verificationStatus === 'verifying' && 'Verifying your email...'}
           {verificationStatus === 'success' && 'Your email has been verified successfully!'}
-          {verificationStatus === 'error' && 'Verification failed or link expired.'}
+          {verificationStatus === 'error' && (errorMessage || 'Verification failed or link expired.')}
         </p>
       </div>
 

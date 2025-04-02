@@ -83,7 +83,7 @@ function App() {
   // Listen for auth state changes and redirect if needed
   useEffect(() => {
     // If user is not logged in and trying to access a protected route
-    if (!user && !['/', '/login', '/register'].includes(location.pathname)) {
+    if (!user && !['/', '/login', '/register','/verify-email'].includes(location.pathname)) {
       navigate('/login', { replace: true });
     }
   }, [user, location.pathname, navigate]);
