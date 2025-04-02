@@ -38,24 +38,17 @@ const getRelativeTime = (timestamp) => {
 const getMarkerIcon = (severity) => {
   if (!window.google) return null;
 
-  const baseConfig = {
-    path: window.google.maps.SymbolPath.CIRCLE,
-    scale: 10,
-    strokeWeight: 2,
-    fillOpacity: 1,
-  };
-
   switch (severity) {
     case "critical":
-      return { ...baseConfig, fillColor: "#EF4444", strokeColor: "#B91C1C" };
+      return { url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png" };
     case "high":
-      return { ...baseConfig, fillColor: "#F97316", strokeColor: "#C2410C" };
+      return { url: "http://maps.google.com/mapfiles/ms/icons/orange-dot.png" };
     case "medium":
-      return { ...baseConfig, fillColor: "#FBBF24", strokeColor: "#B45309" };
+      return { url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png" };
     case "low":
-      return { ...baseConfig, fillColor: "#34D399", strokeColor: "#047857" };
+      return { url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png" };
     default:
-      return { ...baseConfig, fillColor: "#9CA3AF", strokeColor: "#4B5563" };
+      return { url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png" };
   }
 };
 
